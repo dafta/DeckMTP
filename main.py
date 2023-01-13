@@ -7,15 +7,6 @@ import sys
 # append py_modules to PYTHONPATH
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+"/py_modules")
 
-import logging
-
-logging.basicConfig(filename="/tmp/template.log",
-                    format='[Template] %(asctime)s %(levelname)s %(message)s',
-                    filemode='w+',
-                    force=True)
-logger=logging.getLogger()
-logger.setLevel(logging.DEBUG) # can be changed to logging.DEBUG for debugging issues
-
 PLUGIN_DIR = str(pathlib.Path(__file__).parent.resolve())
 PLUGIN_BIN_DIR = PLUGIN_DIR + "/bin"
 
@@ -26,7 +17,6 @@ def get_umtprd_pid() -> int:
         with subprocess.Popen(["pgrep", "--full", "--oldest", "umtprd"], stdout=subprocess.PIPE) as p:
             assert p.stdout is not None
             pid = p.stdout.read().strip()
-            logger.info(pid)
     except:
         return 0
     if not pid:
@@ -70,9 +60,8 @@ class Plugin:
 
     # Toggle MTP
     async def toggle_mtp(self) -> bool:
-        logger.debug("toggle")
         if not is_running():
-            subprocess.run("./start.sh > ~/start.log", cwd=PLUGIN_BIN_DIR, shell=True)
+            subprocess.run("./start.sh", cwd=PLUGIN_BIN_DIR, shell=True)
         else:
             subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, shell=True)
         return is_running()
@@ -81,5 +70,4 @@ class Plugin:
     async def stop_mtp(self):
         if not is_running():
             return
-        process = subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        logging.debug(process)
+        subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, shell=True)
