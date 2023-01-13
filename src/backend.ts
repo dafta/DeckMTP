@@ -25,3 +25,15 @@ async function backend_call<I, O>(name: string, params: I): Promise<O> {
 export async function is_running(): Promise<boolean> {
   return backend_call<{}, boolean>("is_running", {});
 }
+
+export async function is_drd_enabled(): Promise<boolean> {
+  return backend_call<{}, boolean>("is_drd_enabled", {});
+}
+
+export async function toggle_mtp(): Promise<boolean> {
+  return backend_call<{}, boolean>("toggle_mtp", {});
+}
+
+export async function stop_mtp(): Promise<{}> {
+  return backend_call<{}, {}>("stop_mtp", {});
+}
