@@ -2,7 +2,7 @@
 
 A Steam Deck plugin (for Decky Loader) to enable MTP file transfer over USB. USB cable not included.
 
-![Screenshot of Deck UI](assets/screenshot.jpg)
+![Screenshot of Deck UI](assets/screenshot.png)
 
 ## Installation
 
