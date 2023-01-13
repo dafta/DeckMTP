@@ -1,14 +1,24 @@
-# This is the default target, which will be built when 
+# This is the default target, which will be built when
 # you invoke make
 .PHONY: all
-all: hello
+all: umtprd out
 
-# This rule tells make how to build hello from hello.cpp
-hello:
+# This rule tells make how to build the MTP responder
+umtprd:
+	# This enables USB 3.0 support
+	sed -i -e 's%//#define CONFIG_USB_SS_SUPPORT 1%#define CONFIG_USB_SS_SUPPORT 1%' ./src/uMTP-Responder/inc/buildconf.h
+	make -C src/uMTP-Responder/
+
+# This rule creates the output directories and copies the files there
+out:
 	mkdir -p ./out
-	gcc -o ./out/hello ./src/main.c 
+	cp ./src/start.sh ./out/
+	cp ./src/stop.sh ./out/
+	cp ./src/umtprd.conf ./out/
+	cp ./src/uMTP-Responder/umtprd ./out/
 
-# This rule tells make to delete hello and hello.o
-.PHONY: clean 
+# This rule tells make to delete the output files
+.PHONY: clean
 clean:
-	rm -f hello
+	rm -rf ./out
+	make -C src/uMTP-Responder/ clean
