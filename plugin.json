@@ -1,7 +1,7 @@
 {
-  "name": "Example Plugin",
-  "author": "John Doe",
-  "flags": ["debug", "_root"],
+  "name": "MTP",
+  "author": "dafta",
+  "flags": ["debug", "root"],
   "publish": {
     "tags": ["template", "root"],
     "description": "Decky example plugin.",
