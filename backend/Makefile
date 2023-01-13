@@ -5,6 +5,8 @@ all: umtprd out
 
 # This rule tells make how to build the MTP responder
 umtprd:
+	# Clone the MTP submodule
+	git submodule update --init --recursive
 	# This enables USB 3.0 support
 	sed -i -e 's%//#define CONFIG_USB_SS_SUPPORT 1%#define CONFIG_USB_SS_SUPPORT 1%' ./src/uMTP-Responder/inc/buildconf.h
 	make -C src/uMTP-Responder/
