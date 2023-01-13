@@ -56,6 +56,11 @@ sed -i -e "s/SERIAL_NUMBER/$SERIAL_NUMBER/" /etc/umtprd/umtprd.conf
 # Start the MTP responder
 ./umtprd &
 
+# Add the SD card if it's mounted
+if [[ -d "/run/media/mmcblk0p1" ]]; then
+	./umtprd '-cmd:addstorage:/run/media/mmcblk0p1 "SD Card" rw'
+fi
+
 sleep 1
 
 # Enable the USB gadget
