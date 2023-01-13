@@ -1,10 +1,10 @@
 {
-  "name": "MTP",
+  "name": "DeckMTP",
   "author": "Karlo Dautović",
-  "flags": ["debug", "root"],
+  "flags": ["root"],
   "publish": {
-    "tags": ["template", "root"],
-    "description": "Decky example plugin.",
+    "tags": ["file-transfer", "media", "utility", "root"],
+    "description": "A plugin that allows your Steam Deck to transfer files to your PC via MTP and USB",
     "image": "https://opengraph.githubassets.com/1/SteamDeckHomebrew/PluginLoader"
   }
 }
