@@ -1,16 +1,17 @@
 # This is the default target, which will be built when
 # you invoke make
 .PHONY: all
-all: umtprd out
+all: umtprd
 
 # This rule tells make how to build the MTP responder
 umtprd:
-	# This enables USB 3.0 support
+	# Enable USB 3.0 support
 	sed -i -e 's%//#define CONFIG_USB_SS_SUPPORT 1%#define CONFIG_USB_SS_SUPPORT 1%' ./src/uMTP-Responder/inc/buildconf.h
+
+	# Build uMTP-Reponder
 	make -C src/uMTP-Responder/
 
-# This rule creates the output directories and copies the files there
-out:
+	# Create the out directory and copy everything there
 	mkdir -p ./out
 	cp ./src/start.sh ./out/
 	cp ./src/stop.sh ./out/
