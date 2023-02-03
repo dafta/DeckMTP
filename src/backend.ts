@@ -34,6 +34,14 @@ export async function toggle_mtp(): Promise<boolean> {
   return backend_call<{}, boolean>("toggle_mtp", {});
 }
 
+export async function toggle_eth(): Promise<boolean> {
+  return backend_call<{}, boolean>("toggle_eth", {});
+}
+
 export async function stop_mtp(): Promise<{}> {
   return backend_call<{}, {}>("stop_mtp", {});
+}
+
+export async function stop_eth(): Promise<{}> {
+  return backend_call<{}, {}>("stop_eth", {});
 }

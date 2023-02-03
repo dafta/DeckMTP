@@ -1,7 +1,7 @@
 {
-  "name": "deckmtp",
+  "name": "deckGadgets",
   "version": "1.0.0",
-  "description": "A plugin that allows your Steam Deck to transfer files to your PC via MTP and USB",
+  "description": "A DeckyLoader plugin for enabling usb Gadget modes on the SteamDeck",
   "scripts": {
     "build": "shx rm -rf dist && rollup -c",
     "watch": "rollup -c -w",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dafta/DeckMTP.git"
+    "url": "git+https://github.com/itz-depression/DeckGadgets.git"
   },
   "keywords": [
     "decky",
@@ -24,9 +24,9 @@
   "author": "Karlo Dautović <karlo.dautovic@gmail.com>",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/dafta/DeckMTP/issues"
+    "url": "https://github.com/itz-depression/DeckGadgets/issues"
   },
-  "homepage": "https://github.com/dafta/DeckMTP#readme",
+  "homepage": "https://github.com/itz-depression/DeckGadgets#readme",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.1.0",
     "@rollup/plugin-json": "^4.1.0",

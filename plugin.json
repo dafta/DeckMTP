@@ -1,10 +1,10 @@
 {
-  "name": "DeckMTP",
-  "author": "dafta",
+  "name": "DeckGadgets",
+  "author": "dafta+itz-Depression",
   "flags": ["root"],
   "publish": {
     "tags": ["file-transfer", "media", "utility", "root"],
-    "description": "A plugin that allows your Steam Deck to transfer files to your PC via MTP and USB",
-    "image": "https://github.com/dafta/DeckMTP/raw/main/assets/screenshot.png"
+    "description": "A DeckyLoader plugin for enabling usb Gadget modes on the SteamDeck",
+    "image": "https://github.com/itz-depression/DeckGadgets/raw/main/assets/screenshot.png"
   }
 }

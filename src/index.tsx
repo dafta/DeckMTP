@@ -13,6 +13,7 @@ import * as backend from "./backend";
 
 const Content: VFC<{ serverAPI: ServerAPI }> = ({}) => {
   const [mtpEnabled, setMtpEnabled] = useState<boolean>(false);
+  const [ethEnabled, setethEnabled] = useState<boolean>(false);
   const [drdEnabled, setDrdEnabled] = useState<boolean>(false);
 
   useEffect(() => {
@@ -21,6 +22,9 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({}) => {
     });
     backend.is_running().then((running) => {
       setMtpEnabled(running);
+    });
+	backend.is_running().then((running) => {
+	  setethEnabled(running);
     });
   }, []);
 
@@ -33,6 +37,16 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({}) => {
           disabled={!drdEnabled}
           onChange={async () => {
             await backend.toggle_mtp()
+          }}
+        />
+      </PanelSectionRow>
+	   <PanelSectionRow>
+        <ToggleField
+          label="Enable ETH"
+          checked={ethEnabled}
+          disabled={!drdEnabled}
+          onChange={async () => {
+            await backend.toggle_eth()
           }}
         />
       </PanelSectionRow>
