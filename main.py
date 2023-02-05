@@ -85,4 +85,4 @@ class Plugin:
     async def stop_eth(self):
         if not is_running():
             return
-        subprocess.run("sudo ./usbeth.sh stop", cwd=PLUGIN_BIN_DIR, shell=True)
+        subprocess.run("./usbeth.sh stop", cwd=PLUGIN_BIN_DIR, shell=True)
