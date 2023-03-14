@@ -1,6 +1,6 @@
-# DeckMTP
+# DeckGadgets
 
-A Steam Deck plugin (for Decky Loader) to enable MTP file transfer over USB. USB cable not included.
+A DeckyLoader plugin for enabling usb Gadget modes on the SteamDeck
 
 ![Screenshot of Deck UI](assets/screenshot.png)
 

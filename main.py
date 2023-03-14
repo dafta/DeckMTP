@@ -39,6 +39,7 @@ class Plugin:
     # Function called first during the unload process, utilize this to handle your plugin being removed
     async def _unload(self):
         await self.stop_mtp()
+        await self.stop_eth()
         pass
 
     # Check if umtprd is running
@@ -71,3 +72,17 @@ class Plugin:
         if not is_running():
             return
         subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, shell=True)
+
+    # Toggle eth
+    async def toggle_eth(self) -> bool:
+        if not is_running():
+            subprocess.run("./usbeth.sh start -r", cwd=PLUGIN_BIN_DIR, shell=True)
+        else:
+            subprocess.run("./usbeth.sh stop", cwd=PLUGIN_BIN_DIR, shell=True)
+        return is_running()
+        
+    # Stop eth
+    async def stop_eth(self):
+        if not is_running():
+            return
+        subprocess.run("./usbeth.sh stop", cwd=PLUGIN_BIN_DIR, shell=True)
