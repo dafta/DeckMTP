@@ -15,7 +15,7 @@ To enable DRD, go into BIOS by shutting down your deck, and holding Volume Up an
 Then, select Setup Utility, then Advanced, then USB Configuration, and finally USB Dual-Role Device. Select DRD
 instead of the existing XHCI and you're set.
 
-## Warning, doing so may prevent you from booting from USB or preventing you from using the ports in Windows
+## Warning, doing so will prevent you from booting from USB and preventing you from using the ports in Windows as long as the setting is set to DRD
 
 ## Build instrutions
 1. Clone the repository to use as an example for making your plugin.
