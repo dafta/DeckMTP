@@ -11,7 +11,7 @@ import { FaFolder } from "react-icons/fa";
 
 import * as backend from "./backend";
 
-const Content: VFC<{ serverAPI: ServerAPI }> = ({}) => {
+const Content: VFC<{ serverAPI: ServerAPI }> = ({serverAPI}) => {
   const [mtpEnabled, setMtpEnabled] = useState<boolean>(false);
   const [drdEnabled, setDrdEnabled] = useState<boolean>(false);
 

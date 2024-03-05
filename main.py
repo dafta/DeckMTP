@@ -1,14 +1,14 @@
 import os
 import subprocess
-import pathlib
+
+import decky_plugin
 
 import sys
 
 # append py_modules to PYTHONPATH
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/py_modules")
 
-PLUGIN_DIR = str(pathlib.Path(__file__).parent.resolve())
-PLUGIN_BIN_DIR = PLUGIN_DIR + "/bin"
+PLUGIN_BIN_DIR = decky_plugin.DECKY_PLUGIN_DIR + "/bin"
 
 
 # Return umtprd pid if running, or 0 otherwise
