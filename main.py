@@ -5,23 +5,27 @@ import pathlib
 import sys
 
 # append py_modules to PYTHONPATH
-sys.path.append(os.path.dirname(os.path.realpath(__file__))+"/py_modules")
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/py_modules")
 
 PLUGIN_DIR = str(pathlib.Path(__file__).parent.resolve())
 PLUGIN_BIN_DIR = PLUGIN_DIR + "/bin"
+
 
 # Return umtprd pid if running, or 0 otherwise
 def get_umtprd_pid() -> int:
     pid = ""
     try:
-        with subprocess.Popen(["pgrep", "--full", "--oldest", "umtprd"], stdout=subprocess.PIPE) as p:
+        with subprocess.Popen(
+            ["pgrep", "--full", "--oldest", "umtprd"], stdout=subprocess.PIPE
+        ) as p:
             assert p.stdout is not None
             pid = p.stdout.read().strip()
-    except:
+    except Exception:
         return 0
     if not pid:
         return 0
     return int(pid)
+
 
 # Check if umtprd is running
 def is_running() -> bool:
@@ -31,12 +35,14 @@ def is_running() -> bool:
     else:
         return False
 
+
 class Plugin:
     # Asyncio-compatible long-running code, executed in a task when the plugin is loaded
     async def _main(self):
         pass
 
-    # Function called first during the unload process, utilize this to handle your plugin being removed
+    # Function called first during the unload process,
+    # utilize this to handle your plugin being removed
     async def _unload(self):
         await self.stop_mtp()
         pass
@@ -51,7 +57,7 @@ class Plugin:
             with subprocess.Popen("lsmod | grep dwc3", shell=True, stdout=subprocess.PIPE) as p:
                 assert p.stdout is not None
                 result = p.stdout.read().strip()
-        except:
+        except Exception:
             return False
         if not result:
             return False
