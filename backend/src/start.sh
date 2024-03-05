@@ -57,9 +57,16 @@ sed -i -e "s/SERIAL_NUMBER/$SERIAL_NUMBER/" /etc/umtprd/umtprd.conf
 ./umtprd &
 
 # Add the SD card if it's mounted
-if [[ -d "/run/media/mmcblk0p1" ]]; then
-	./umtprd '-cmd:addstorage:/run/media/mmcblk0p1 "SD Card" rw'
-fi
+for mount in $(ls /run/media); do
+	folder="/run/media/$mount"
+	if [[ "$mount" != "deck" && -d "$folder" ]]; then
+		if [[ "$mount" != "mmcblk0p1" ]]; then
+			name=" ($mount)"
+		fi
+
+		./umtprd "-cmd:addstorage:$folder \"SD Card$name\" rw"
+	fi
+done
 
 sleep 1
 
