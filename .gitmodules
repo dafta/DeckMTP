@@ -1,3 +1,6 @@
 [submodule "backend/src/uMTP-Responder"]
 	path = backend/src/uMTP-Responder
 	url = https://github.com/viveris/uMTP-Responder
+[submodule "backend/src/systemd-gadget"]
+	path = backend/src/systemd-gadget
+	url = https://github.com/dafta/systemd-gadget
