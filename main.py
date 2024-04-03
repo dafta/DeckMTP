@@ -11,26 +11,16 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/py_modules")
 PLUGIN_BIN_DIR: str = decky_plugin.DECKY_PLUGIN_DIR + "/bin"
 
 
-# Return umtprd pid if running, or 0 otherwise
-def get_umtprd_pid() -> int:
-    pid = ""
-    try:
-        with subprocess.Popen(
-            ["pgrep", "--full", "--oldest", "umtprd"], stdout=subprocess.PIPE
-        ) as p:
-            assert p.stdout is not None
-            pid = p.stdout.read().strip()
-    except Exception:
-        return 0
-    if not pid:
-        return 0
-    return int(pid)
+# Helper for systemctl commands
+def systemctl(*args: str) -> int:
+    command: list[str] = [ 'systemctl' ]
+    command.extend(args)
+    return subprocess.run(command).returncode
 
 
 # Check if umtprd is running
 def is_running() -> bool:
-    pid = get_umtprd_pid()
-    if pid != 0:
+    if systemctl('status', 'umtprd') == 0:
         return True
     else:
         return False
