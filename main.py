@@ -1,14 +1,14 @@
 import os
 import subprocess
+import sys
 
 import decky_plugin
 
-import sys
 
 # append py_modules to PYTHONPATH
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/py_modules")
 
-PLUGIN_BIN_DIR = decky_plugin.DECKY_PLUGIN_DIR + "/bin"
+PLUGIN_BIN_DIR: str = decky_plugin.DECKY_PLUGIN_DIR + "/bin"
 
 
 # Return umtprd pid if running, or 0 otherwise
@@ -67,13 +67,13 @@ class Plugin:
     # Toggle MTP
     async def toggle_mtp(self) -> bool:
         if not is_running():
-            subprocess.run("./start.sh", cwd=PLUGIN_BIN_DIR, shell=True)
+            _ = subprocess.run("./start.sh", cwd=PLUGIN_BIN_DIR, shell=True)
         else:
-            subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, shell=True)
+            _ = subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, shell=True)
         return is_running()
 
     # Stop MTP
     async def stop_mtp(self):
         if not is_running():
             return
-        subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, shell=True)
+        _ = subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, shell=True)
