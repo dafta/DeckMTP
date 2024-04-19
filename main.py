@@ -12,18 +12,15 @@ PLUGIN_BIN_DIR: str = decky_plugin.DECKY_PLUGIN_DIR + "/bin"
 
 
 # Helper for systemctl commands
-def systemctl(*args: str) -> int:
-    command: list[str] = [ 'systemctl' ]
+def systemctl(*args: str) -> bool:
+    command: list[str] = ["systemctl"]
     command.extend(args)
-    return subprocess.run(command).returncode
+    return subprocess.run(command, check=False).returncode == 0
 
 
 # Check if umtprd is running
 def is_running() -> bool:
-    if systemctl('status', 'umtprd') == 0:
-        return True
-    else:
-        return False
+    return systemctl("status", "umtprd")
 
 
 class Plugin:
@@ -35,7 +32,6 @@ class Plugin:
     # utilize this to handle your plugin being removed
     async def _unload(self):
         await self.stop_mtp()
-        pass
 
     # Check if umtprd is running
     async def is_running(self) -> bool:
@@ -44,26 +40,27 @@ class Plugin:
     # Check if Dual-Role Device is enabled in BIOS
     async def is_drd_enabled(self) -> bool:
         try:
-            with subprocess.Popen("lsmod | grep dwc3", shell=True, stdout=subprocess.PIPE) as p:
+            with subprocess.Popen(
+                "lsmod | grep dwc3", shell=True, stdout=subprocess.PIPE
+            ) as p:
                 assert p.stdout is not None
                 result = p.stdout.read().strip()
         except Exception:
             return False
-        if not result:
-            return False
-        else:
-            return True
+        return bool(result)
 
     # Toggle MTP
     async def toggle_mtp(self) -> bool:
         if not is_running():
-            _ = subprocess.run("./start.sh", cwd=PLUGIN_BIN_DIR, shell=True)
+            _ = subprocess.run(
+                "./start.sh", cwd=PLUGIN_BIN_DIR, check=False, shell=True
+            )
         else:
-            _ = subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, shell=True)
+            _ = subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, check=False, shell=True)
         return is_running()
 
     # Stop MTP
     async def stop_mtp(self):
         if not is_running():
             return
-        _ = subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, shell=True)
+        _ = subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, check=False, shell=True)
