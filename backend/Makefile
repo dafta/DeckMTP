@@ -1,18 +1,27 @@
-# All the systemd files that need to be copied to output
-systemd := umtprd.service
-systemd += gadget
-systemd += gadget-init.service gadget-init.sh
-systemd += gadget-start.service gadget-start.sh
-systemd += usbgadget-func-mtp.service
+# All the systemd service files that need to be copied to output
+services := umtprd.service
+services += gadget-init.service
+services += gadget-start.service
+services += usbgadget-func-mtp.service
+
+# All the config files that need to be copied to output
+configs := gadget
+
+# All the scripts that need to be copied to output
+scripts := gadget-init.sh
+scripts += gadget-start.sh
 
 # This is the default target, which will be built when
 # you invoke make
 .PHONY: all
-all: umtprd $(systemd)
+all: umtprd $(services) $(scripts) $(configs)
 
-# This rule creates the output directory
+# This rule creates the output directories
 out:
 	mkdir -p out
+	mkdir -p out/scripts
+	mkdir -p out/configs
+	mkdir -p out/services
 
 # This rule tells make how to build the MTP responder
 umtprd: out
@@ -23,14 +32,22 @@ umtprd: out
 	make -C src/uMTP-Responder/
 
 	# Copy output to output directory there
-	cp src/start.sh out/
-	cp src/stop.sh out/
-	cp src/umtprd.conf out/
+	cp src/start.sh out/scripts/
+	cp src/stop.sh out/scripts/
+	cp src/umtprd.conf out/configs/
 	cp src/uMTP-Responder/umtprd out/
 
-# This rule copies all the relevant systemd files
-$(systemd): out
-	cp src/systemd-gadget/$@ out/
+# This rule copies all the relevant systemd service files
+$(services): out
+	cp src/systemd-gadget/$@ out/services/
+
+# This rule copies all the relevant scripts
+$(scripts): out
+	cp src/systemd-gadget/$@ out/scripts/
+
+# This rule copies all the relevant config files
+$(configs): out
+	cp src/systemd-gadget/$@ out/configs/
 
 # This rule tells make to delete the output files
 .PHONY: clean

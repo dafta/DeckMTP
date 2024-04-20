@@ -52,7 +52,7 @@ cd ../../..
 
 # Copy the MTP responder config to /etc/umtprd
 mkdir /etc/umtprd
-cp ./umtprd.conf /etc/umtprd/
+cp ../configs/umtprd.conf /etc/umtprd/
 
 # Replace the serial number in the MTP responder config
 sed -i -e "s/SERIAL_NUMBER/$SERIAL_NUMBER/" /etc/umtprd/umtprd.conf
