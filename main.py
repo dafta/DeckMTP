@@ -1,12 +1,12 @@
-import os
-import subprocess
 import sys
+import pathlib
+import subprocess
 
 import decky_plugin
 
 
 # append py_modules to PYTHONPATH
-sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/py_modules")
+sys.path.append(pathlib.Path(__file__).parent / 'py_modules')
 
 PLUGIN_BIN_DIR: str = decky_plugin.DECKY_PLUGIN_DIR + "/bin"
 
