@@ -16,15 +16,8 @@ scripts += gadget-start.sh
 .PHONY: all
 all: umtprd $(services) $(scripts) $(configs)
 
-# This rule creates the output directories
-out:
-	mkdir -p out
-	mkdir -p out/scripts
-	mkdir -p out/configs
-	mkdir -p out/services
-
 # This rule tells make how to build the MTP responder
-umtprd: out
+umtprd: outdirs
 	# Enable USB 3.0 support
 	sed -i -e 's%//#define CONFIG_USB_SS_SUPPORT 1%#define CONFIG_USB_SS_SUPPORT 1%' src/uMTP-Responder/inc/buildconf.h
 
@@ -38,16 +31,24 @@ umtprd: out
 	cp src/uMTP-Responder/umtprd out/
 
 # This rule copies all the relevant systemd service files
-$(services): out
+$(services): outdirs
 	cp src/systemd-gadget/$@ out/services/
 
 # This rule copies all the relevant scripts
-$(scripts): out
+$(scripts): outdirs
 	cp src/systemd-gadget/$@ out/scripts/
 
 # This rule copies all the relevant config files
-$(configs): out
+$(configs): outdirs
 	cp src/systemd-gadget/$@ out/configs/
+
+# This rule creates the output directories
+.PHONY: outdirs
+outdirs:
+	mkdir -p out
+	mkdir -p out/scripts
+	mkdir -p out/configs
+	mkdir -p out/services
 
 # This rule tells make to delete the output files
 .PHONY: clean
