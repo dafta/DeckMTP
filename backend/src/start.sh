@@ -3,6 +3,10 @@
 # Get the serial number
 export SERIAL_NUMBER=$(dmidecode -s system-serial-number)
 
+# Enable DRD driver
+echo -n "0000:04:00.3" > /sys/bus/pci/drivers/xhci_hcd/unbind
+echo -n "0000:04:00.3" > /sys/bus/pci/drivers/dwc3-pci/bind
+
 # Load the drivers
 modprobe libcomposite
 
