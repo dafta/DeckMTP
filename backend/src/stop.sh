@@ -41,3 +41,7 @@ rmdir /dev/ffs-mtp
 # Unload the drivers
 modprobe -r usb_f_fs
 modprobe -r libcomposite
+
+# Disable DRD driver
+echo -n "0000:04:00.3" > /sys/bus/pci/drivers/dwc3-pci/unbind
+echo -n "0000:04:00.3" > /sys/bus/pci/drivers/xhci_hcd/bind
