@@ -56,11 +56,15 @@ class Plugin:
                 "./scripts/start.sh", cwd=PLUGIN_BIN_DIR, check=False, shell=True
             )
         else:
-            _ = subprocess.run("./scripts/stop.sh", cwd=PLUGIN_BIN_DIR, check=False, shell=True)
+            _ = subprocess.run(
+                "./scripts/stop.sh", cwd=PLUGIN_BIN_DIR, check=False, shell=True
+            )
         return is_running()
 
     # Stop MTP
     async def stop_mtp(self):
         if not is_running():
             return
-        _ = subprocess.run("./scripts/stop.sh", cwd=PLUGIN_BIN_DIR, check=False, shell=True)
+        _ = subprocess.run(
+            "./scripts/stop.sh", cwd=PLUGIN_BIN_DIR, check=False, shell=True
+        )
