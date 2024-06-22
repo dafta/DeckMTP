@@ -25,9 +25,9 @@ SERVICES: list[str] = [
 ]
 
 # Configs to install, and the folders to install them into
-CONFIGS: list[tuple[str,str]] = [
-    ("gadget", decky_plugin.DECKY_PLUGIN_SETTINGS_DIR),
-    ("umtprd.conf", "/etc/umtprd"),
+CONFIGS: list[str] = [
+    "gadget",
+    "umtprd.conf",
 ]
 
 
@@ -43,43 +43,67 @@ def is_running() -> bool:
     return systemctl("status", "umtprd")
 
 
+# Read file and write to another path, optionally replace templates
+def copy_template(
+    input_file: Path, output_file: Path, substitutions: dict[str, str] | None = None
+):
+    # Read the file
+    text = input_file.read_text(encoding="utf-8")
+
+    # Replace templates in services text
+    if substitutions is not None:
+        template = Template(text)
+        text = template.safe_substitute(substitutions)
+
+    _ = output_file.write_text(text, encoding="utf-8")
+
+
+# Deploy umtprd.conf to the correct location
+def deploy_umtprd_conf():
+    input_file = Path(decky_plugin.DECKY_PLUGIN_SETTINGS_DIR, "umtprd.conf")
+    output_file = Path("/etc/umtprd/umtprd.conf")
+
+    # Create the folder if it doesn't exist
+    if not output_file.parent.exists():
+        output_file.parent.mkdir()
+
+    # Copy the file
+    copy_template(input_file, output_file)
+
+
 class Plugin:
     # Asyncio-compatible long-running code, executed in a task when the plugin is loaded
     async def _main(self):
         # Copy configs to correct directory
         for config in CONFIGS:
-            input_file = Path(PLUGIN_CONFIGS_DIR, config[0])
-            output_folder = Path(config[1])
-            output_file = output_folder / config[0]
-
-            if not output_folder.exists():
-                output_folder.mkdir()
+            input_file = Path(PLUGIN_CONFIGS_DIR, config)
+            output_file = Path(decky_plugin.DECKY_PLUGIN_SETTINGS_DIR, config)
 
             if not output_file.exists():
-                _ = output_file.write_text(input_file.read_text(encoding="utf-8"))
+                copy_template(input_file, output_file)
 
         # Copy services to correct directory
         for service in SERVICES:
             input_file = Path(PLUGIN_SERVICES_DIR, service)
+            output_file = Path(decky_plugin.DECKY_PLUGIN_RUNTIME_DIR, service)
 
-            # Replace templates in services text
-            template = Template(input_file.read_text(encoding="utf-8"))
+            # Define substitutions
             substitutions: dict[str, str] = {
                 "bindir": PLUGIN_BIN_DIR,
                 "scriptsdir": PLUGIN_SCRIPTS_DIR,
                 "envfile": decky_plugin.DECKY_PLUGIN_SETTINGS_DIR + "/gadget",
             }
 
-            # Write substituted service
-            output_file = Path(decky_plugin.DECKY_PLUGIN_RUNTIME_DIR, service)
-            _ = output_file.write_text(
-                template.safe_substitute(substitutions), encoding="utf-8"
-            )
+            # Replace templates and copy file
+            copy_template(input_file, output_file, substitutions)
+
+        # Copy umtprd.conf to the correct location
+        deploy_umtprd_conf()
 
         # Link services to systemd
         for service in SERVICES:
             service_file = Path(decky_plugin.DECKY_PLUGIN_RUNTIME_DIR, service)
-            _ = systemctl("link", str(service_file))
+            _ = systemctl("enable", str(service_file))
 
     # Function called first during the unload process,
     # utilize this to handle your plugin being removed
@@ -113,7 +137,7 @@ class Plugin:
     # Toggle MTP
     async def toggle_mtp(self) -> bool:
         if not is_running():
-            _ = Plugin.start_mtp(self)
+            _ = await Plugin.start_mtp(self)
         else:
-            _ = Plugin.stop_mtp(self)
+            _ = await Plugin.stop_mtp(self)
         return is_running()
