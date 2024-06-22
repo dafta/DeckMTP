@@ -1,5 +1,6 @@
 # All the systemd service files that need to be copied to output
 services := umtprd.service
+services += gadget-bind.service
 services += gadget-init.service
 services += gadget-start.service
 services += usbgadget-func-mtp.service
@@ -8,7 +9,8 @@ services += usbgadget-func-mtp.service
 configs := gadget
 
 # All the scripts that need to be copied to output
-scripts := gadget-init.sh
+scripts := gadget-bind.sh
+scripts += gadget-init.sh
 scripts += gadget-start.sh
 
 # This is the default target, which will be built when
