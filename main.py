@@ -18,6 +18,7 @@ PLUGIN_CONFIGS_DIR: str = PLUGIN_BIN_DIR + "/configs"
 
 # Services to install
 SERVICES: list[str] = [
+    "gadget-bind.service",
     "gadget-init.service",
     "gadget-start.service",
     "umtprd.service",
