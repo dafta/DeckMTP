@@ -108,7 +108,18 @@ class Plugin:
     # Function called first during the unload process,
     # utilize this to handle your plugin being removed
     async def _unload(self):
+        # Stop MTP
         _ = await Plugin.stop_mtp(self)
+
+        # Disable (remove) all systemd services
+        for service in SERVICES:
+            _ = systemctl("disable", service)
+
+        # Delete umtprd.conf from /etc
+        umtprd_conf = Path("/etc/umtprd/umtprd.conf")
+        umtprd_conf.unlink(missing_ok=True)
+        if umtprd_conf.parent.exists():
+            umtprd_conf.parent.rmdir()
 
     # Check if umtprd is running
     async def is_running(self) -> bool:
