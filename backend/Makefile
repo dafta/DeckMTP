@@ -27,8 +27,6 @@ umtprd: outdirs
 	make -C src/uMTP-Responder/
 
 	# Copy output to output directory there
-	cp src/start.sh out/scripts/
-	cp src/stop.sh out/scripts/
 	cp src/umtprd.conf out/configs/
 	cp src/uMTP-Responder/umtprd out/
 
