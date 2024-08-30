@@ -106,6 +106,10 @@ class Plugin:
             service_file = Path(decky_plugin.DECKY_PLUGIN_RUNTIME_DIR, service)
             _ = systemctl("enable", str(service_file))
 
+        # Only use the bind service if the interface isn't bound to the correct driver
+        if not Path("/sys/bus/pci/drivers/xhci_hcd/0000:04:00.3").is_file():
+            _ = systemctl("disable", "gadget-bind.service")
+
     # Function called first during the unload process,
     # utilize this to handle your plugin being removed
     async def _unload(self):
