@@ -144,7 +144,7 @@ class Plugin:
 
     # Stop MTP
     async def stop_mtp(self) -> bool:
-        return systemctl("stop", "gadget-init.service")
+        return systemctl("stop", "usb-gadget.target")
 
     # Toggle MTP
     async def toggle_mtp(self) -> bool:
