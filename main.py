@@ -142,6 +142,27 @@ class Plugin:
             return False
         return bool(result)
 
+    # Add folder to umtprd
+    async def umtprd_add_folder(self, folder: Path, name: str) -> bool:
+        # Check if the folder exists
+        if not folder.exists():
+            return False
+
+        # The command to add the folder
+        command: list[str] = [
+            PLUGIN_BIN_DIR + "/umtprd",
+            "-cmd:addstorage:" + str(folder) + ' "' + name + '"' + " rw"
+        ]
+
+        # Run the command
+        return subprocess.run(command, check=False).returncode == 0
+
+    # Add SD card folders
+    async def mtp_add_sdcard(self):
+        for folder in Path("/run/media").iterdir():
+            if folder.is_mount():
+                _ = await Plugin.umtprd_add_folder(self, folder, folder.name)
+
     # Start MTP
     async def start_mtp(self) -> bool:
         return systemctl("start", "usb-gadget.target")
@@ -154,6 +175,7 @@ class Plugin:
     async def toggle_mtp(self) -> bool:
         if not is_running():
             _ = await Plugin.start_mtp(self)
+            _ = await Plugin.mtp_add_sdcard(self)
         else:
             _ = await Plugin.stop_mtp(self)
         return is_running()
