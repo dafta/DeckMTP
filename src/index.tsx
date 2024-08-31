@@ -32,7 +32,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({serverAPI}) => {
           checked={mtpEnabled}
           disabled={!drdEnabled}
           onChange={async () => {
-            await backend.toggle_mtp()
+            await backend.toggle_gadget()
           }}
         />
       </PanelSectionRow>
@@ -67,7 +67,7 @@ export default definePlugin((serverApi: ServerAPI) => {
     content: <Content serverAPI={serverApi} />,
     icon: <FaFolder />,
     onDismount() {
-      backend.stop_mtp()
+      backend.stop_gadget()
     },
   };
 });

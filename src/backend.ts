@@ -30,10 +30,10 @@ export async function is_drd_enabled(): Promise<boolean> {
   return backend_call<{}, boolean>("is_drd_enabled", {});
 }
 
-export async function toggle_mtp(): Promise<boolean> {
-  return backend_call<{}, boolean>("toggle_mtp", {});
+export async function toggle_gadget(): Promise<boolean> {
+  return backend_call<{}, boolean>("toggle_gadget", {});
 }
 
-export async function stop_mtp(): Promise<{}> {
-  return backend_call<{}, {}>("stop_mtp", {});
+export async function stop_gadget(): Promise<{}> {
+  return backend_call<{}, {}>("stop_gadget", {});
 }
