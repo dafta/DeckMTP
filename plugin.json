@@ -2,6 +2,7 @@
   "name": "DeckMTP",
   "author": "dafta",
   "flags": ["root"],
+  "api_version": 1,
   "publish": {
     "tags": ["file-transfer", "media", "utility", "root"],
     "description": "A plugin that allows your Steam Deck to transfer files to your PC via MTP and USB",
