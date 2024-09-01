@@ -1,6 +1,6 @@
 import subprocess
 
-import decky_plugin
+import decky
 
 # Helper for systemctl commands
 
@@ -17,7 +17,7 @@ def enable(services: list[str]) -> bool:
     command: list[str] = ["systemctl", "enable"]
 
     for service in services:
-        command.append(decky_plugin.DECKY_PLUGIN_RUNTIME_DIR + "/" + service)
+        command.append(decky.DECKY_PLUGIN_RUNTIME_DIR + "/" + service)
 
     return subprocess.run(command, check=False).returncode == 0
 

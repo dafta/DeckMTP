@@ -1,10 +1,10 @@
 from pathlib import Path
 from string import Template
 
-import decky_plugin
+import decky
 
 # Constants to important folders
-PLUGIN_BIN_DIR: str = decky_plugin.DECKY_PLUGIN_DIR + "/bin"
+PLUGIN_BIN_DIR: str = decky.DECKY_PLUGIN_DIR + "/bin"
 PLUGIN_SERVICES_DIR: str = PLUGIN_BIN_DIR + "/services"
 PLUGIN_SCRIPTS_DIR: str = PLUGIN_BIN_DIR + "/scripts"
 PLUGIN_CONFIGS_DIR: str = PLUGIN_BIN_DIR + "/configs"

@@ -1,7 +1,7 @@
 from pathlib import Path
 import subprocess
 
-import decky_plugin
+import decky
 
 from . import utils
 from . import systemctl
@@ -32,7 +32,7 @@ def disable():
 
 # Deploy umtprd.conf to the correct location
 def deploy_umtprd_conf():
-    input_file = Path(decky_plugin.DECKY_PLUGIN_SETTINGS_DIR, "umtprd.conf")
+    input_file = Path(decky.DECKY_PLUGIN_SETTINGS_DIR, "umtprd.conf")
     output_file = Path("/etc/umtprd/umtprd.conf")
 
     # Create the folder if it doesn't exist

@@ -2,7 +2,7 @@ from pathlib import Path
 import subprocess
 import sys
 
-import decky_plugin
+import decky
 
 # Append py_modules to PYTHONPATH
 sys.path.append(str(Path(__file__).parent / "py_modules"))
@@ -25,7 +25,7 @@ class Plugin:
         # Copy configs to correct directory
         for config in utils.CONFIGS:
             input_file = Path(utils.PLUGIN_CONFIGS_DIR, config)
-            output_file = Path(decky_plugin.DECKY_PLUGIN_SETTINGS_DIR, config)
+            output_file = Path(decky.DECKY_PLUGIN_SETTINGS_DIR, config)
 
             if not output_file.exists():
                 utils.copy_template(input_file, output_file)
@@ -33,13 +33,13 @@ class Plugin:
         # Copy services to correct directory
         for service in utils.SERVICES:
             input_file = Path(utils.PLUGIN_SERVICES_DIR, service)
-            output_file = Path(decky_plugin.DECKY_PLUGIN_RUNTIME_DIR, service)
+            output_file = Path(decky.DECKY_PLUGIN_RUNTIME_DIR, service)
 
             # Define substitutions
             substitutions: dict[str, str] = {
                 "bindir": utils.PLUGIN_BIN_DIR,
                 "scriptsdir": utils.PLUGIN_SCRIPTS_DIR,
-                "envfile": decky_plugin.DECKY_PLUGIN_SETTINGS_DIR + "/gadget",
+                "envfile": decky.DECKY_PLUGIN_SETTINGS_DIR + "/gadget",
             }
 
             # Replace templates and copy file
