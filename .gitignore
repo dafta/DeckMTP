@@ -22,7 +22,6 @@ coverage
 # Dependency directory
 node_modules
 bower_components
-py_modules
 .pnpm-store
 
 # Editors
