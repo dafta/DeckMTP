@@ -3,8 +3,6 @@ from string import Template
 
 import decky_plugin
 
-from . import systemctl
-
 # Constants to important folders
 PLUGIN_BIN_DIR: str = decky_plugin.DECKY_PLUGIN_DIR + "/bin"
 PLUGIN_SERVICES_DIR: str = PLUGIN_BIN_DIR + "/services"
@@ -25,11 +23,6 @@ CONFIGS: list[str] = [
     "gadget",
     "umtprd.conf",
 ]
-
-
-# Check if umtprd is running
-def is_running() -> bool:
-    return systemctl.status("umtprd")
 
 
 # Read file and write to another path, optionally replace templates

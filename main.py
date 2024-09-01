@@ -49,7 +49,7 @@ class Plugin:
         if not Path("/sys/bus/pci/drivers/xhci_hcd/0000:04:00.3").is_file():
             self.services.remove("gadget-bind.service")
 
-        _ = await Plugin.enable(self)
+        Plugin.enable(self)
         mtp.enable()
 
     # Function called first during the unload process,
@@ -60,19 +60,19 @@ class Plugin:
 
         # Disable (remove) all systemd services
         mtp.disable()
-        _ = await Plugin.disable(self)
+        Plugin.disable(self)
 
     # Enable services
-    async def enable(self):
+    def enable(self):
         _ = systemctl.enable(self.services)
 
     # Disable services
-    async def disable(self):
+    def disable(self):
         _ = systemctl.disable(self.services)
 
     # Check if umtprd is running
     async def is_running(self) -> bool:
-        return utils.is_running()
+        return systemctl.status("umtprd")
 
     # Check if Dual-Role Device is enabled in BIOS
     async def is_drd_enabled(self) -> bool:
@@ -89,9 +89,9 @@ class Plugin:
 
     # Toggle USB Gadget
     async def toggle_gadget(self) -> bool:
-        if not utils.is_running():
+        if not await Plugin.is_running(self):
             _ = await Plugin.start_gadget(self)
             mtp.add_sdcard_folders()
         else:
             _ = await Plugin.stop_gadget(self)
-        return utils.is_running()
+        return await Plugin.is_running(self)
