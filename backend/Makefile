@@ -3,7 +3,15 @@ services := umtprd.service
 services += gadget-bind.service
 services += gadget-init.service
 services += gadget-start.service
+services += usbgadget-func-ecm.service
+services += usbgadget-func-eem.service
+services += usbgadget-func-geth.service
 services += usbgadget-func-mtp.service
+services += usbgadget-func-ncm.service
+services += usbgadget-func-rndis.service
+
+# All the systemd network files that need to be copied to output
+networks := usb0.network
 
 # All the config files that need to be copied to output
 configs := gadget
@@ -16,7 +24,7 @@ scripts += gadget-start.sh
 # This is the default target, which will be built when
 # you invoke make
 .PHONY: all
-all: umtprd $(services) $(scripts) $(configs)
+all: umtprd $(services) $(networks) $(scripts) $(configs)
 
 # This rule tells make how to build the MTP responder
 umtprd: outdirs
@@ -34,6 +42,10 @@ umtprd: outdirs
 $(services): outdirs
 	cp src/systemd-gadget/$@ out/services/
 
+# This rule copies all the relevant systemd network files
+$(networks): outdirs
+	cp src/systemd-gadget/$@ out/networks/
+
 # This rule copies all the relevant scripts
 $(scripts): outdirs
 	cp src/systemd-gadget/$@ out/scripts/
@@ -46,9 +58,10 @@ $(configs): outdirs
 .PHONY: outdirs
 outdirs:
 	mkdir -p out
+	mkdir -p out/services
+	mkdir -p out/networks
 	mkdir -p out/scripts
 	mkdir -p out/configs
-	mkdir -p out/services
 
 # This rule tells make to delete the output files
 .PHONY: clean

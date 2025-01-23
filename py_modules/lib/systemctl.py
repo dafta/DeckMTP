@@ -6,8 +6,15 @@ import decky
 
 
 # Systemctl status
-def status(service: str) -> bool:
+def is_active(service: str) -> bool:
     command: list[str] = ["systemctl", "status"]
+    command.append(service)
+    return subprocess.run(command, check=False).returncode == 0
+
+
+# Systemctl is-enabled
+def is_enabled(service: str) -> bool:
+    command: list[str] = ["systemctl", "is-enabled"]
     command.append(service)
     return subprocess.run(command, check=False).returncode == 0
 

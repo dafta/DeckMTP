@@ -30,6 +30,21 @@ def disable():
         umtprd_conf.parent.rmdir()
 
 
+def is_enabled():
+    for service in services:
+        if not systemctl.is_enabled(service):
+            return False
+
+    return True
+
+
+def toggle():
+    if is_enabled():
+        disable()
+    else:
+        enable()
+
+
 # Deploy umtprd.conf to the correct location
 def deploy_umtprd_conf():
     input_file = Path(decky.DECKY_PLUGIN_SETTINGS_DIR, "umtprd.conf")
