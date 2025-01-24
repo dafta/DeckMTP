@@ -7,8 +7,9 @@ sys.path.append(str(Path(__file__).parent / "py_modules"))
 
 from lib import utils
 from lib import systemctl
-from lib import mtp
-from lib import ethernet
+
+from lib.mtp import Mtp
+from lib.ethernet import Ethernet
 
 
 class Plugin:
@@ -19,6 +20,12 @@ class Plugin:
         "gadget-start.service",
     ]
 
+    # MTP gadget plugin
+    mtp: Mtp
+
+    # Ethernet gadget plugin
+    ethernet: Ethernet
+
     # Asyncio-compatible long-running code, executed in a task when the plugin is loaded
     async def _main(self):
         # Install plugin files
@@ -28,8 +35,12 @@ class Plugin:
         if not Path("/sys/bus/pci/drivers/xhci_hcd/0000:04:00.3").is_file():
             self.services.remove("gadget-bind.service")
 
+        # Init plugin
         Plugin.enable(self)
-        _ = await Plugin.stop_usb(self)
+
+        # Init gadget plugins
+        Plugin.mtp = Mtp()
+        Plugin.ethernet = Ethernet()
 
     # Function called first during the unload process,
     # utilize this to handle your plugin being removed
@@ -38,8 +49,14 @@ class Plugin:
         _ = await Plugin.stop_usb(self)
 
         # Disable (remove) all systemd services
-        mtp.disable()
-        ethernet.disable()
+        Plugin.disable(self)
+
+    # Function called when the plugin is uninstalled
+    async def _uninstall(self):
+        # Stop USB gadget
+        _ = await Plugin.stop_usb(self)
+
+        # Disable (remove) all systemd services
         Plugin.disable(self)
 
     # Enable services
@@ -48,6 +65,8 @@ class Plugin:
 
     # Disable services
     def disable(self):
+        Plugin.mtp.disable()
+        Plugin.ethernet.disable()
         _ = systemctl.disable(self.services)
 
     # Check if Dual-Role Device is enabled in BIOS
@@ -61,9 +80,9 @@ class Plugin:
     async def is_function_enabled(self, function: str) -> bool:
         match function:
             case "mtp":
-                return mtp.is_enabled()
+                return Plugin.mtp.is_enabled()
             case "ethernet":
-                return ethernet.is_enabled()
+                return Plugin.ethernet.is_enabled()
             case _:
                 return False
 
@@ -71,15 +90,15 @@ class Plugin:
     async def toggle_function(self, function: str):
         match function:
             case "mtp":
-                mtp.toggle()
+                Plugin.mtp.toggle()
             case "ethernet":
-                ethernet.toggle()
+                Plugin.ethernet.toggle()
             case _:
                 pass
 
     # Check if USB gadget is running
     async def is_running(self) -> bool:
-        return systemctl.is_active("usb-gadget.target")
+        return systemctl.is_active("gadget-start.service")
 
     # Start USB gadget
     async def start_usb(self) -> bool:
@@ -93,6 +112,7 @@ class Plugin:
     async def toggle_usb(self):
         if not await Plugin.is_running(self):
             _ = await Plugin.start_usb(self)
-            # mtp.add_sdcard_folders()
+            if Plugin.mtp.is_enabled():
+                Plugin.mtp.add_sdcard_folders()
         else:
             _ = await Plugin.stop_usb(self)

@@ -1,3 +1,4 @@
 {
-	"reportMissingModuleSource": false
+	"reportMissingModuleSource": false,
+	"reportUninitializedInstanceVariable": false
 }
