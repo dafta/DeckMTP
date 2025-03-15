@@ -1,6 +1,6 @@
 {
   "name": "deckmtp",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A plugin that allows your Steam Deck to transfer files to your PC via MTP and USB",
   "scripts": {
     "build": "shx rm -rf dist && rollup -c",
