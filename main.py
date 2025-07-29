@@ -4,11 +4,15 @@ import sys
 
 import decky_plugin
 
-
 # append py_modules to PYTHONPATH
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/py_modules")
 
 PLUGIN_BIN_DIR: str = decky_plugin.DECKY_PLUGIN_DIR + "/bin"
+
+
+# Create a subprocess environment with an empty LD_LIBRARY_PATH
+env: dict[str, str] = os.environ.copy()
+del env["LD_LIBRARY_PATH"]
 
 
 # Return umtprd pid if running, or 0 otherwise
@@ -16,7 +20,7 @@ def get_umtprd_pid() -> int:
     pid = ""
     try:
         with subprocess.Popen(
-            ["pgrep", "--full", "--oldest", "umtprd"], stdout=subprocess.PIPE
+            ["pgrep", "--full", "--oldest", "umtprd"], stdout=subprocess.PIPE, env=env
         ) as p:
             assert p.stdout is not None
             pid = p.stdout.read().strip()
@@ -54,7 +58,9 @@ class Plugin:
     # Check if Dual-Role Device is enabled in BIOS
     async def is_drd_enabled(self) -> bool:
         try:
-            with subprocess.Popen("lsmod | grep dwc3", shell=True, stdout=subprocess.PIPE) as p:
+            with subprocess.Popen(
+                "lsmod | grep dwc3", shell=True, stdout=subprocess.PIPE, env=env
+            ) as p:
                 assert p.stdout is not None
                 result = p.stdout.read().strip()
         except Exception:
@@ -67,13 +73,13 @@ class Plugin:
     # Toggle MTP
     async def toggle_mtp(self) -> bool:
         if not is_running():
-            _ = subprocess.run("./start.sh", cwd=PLUGIN_BIN_DIR, shell=True)
+            _ = subprocess.run("./start.sh", cwd=PLUGIN_BIN_DIR, shell=True, env=env)
         else:
-            _ = subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, shell=True)
+            _ = subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, shell=True, env=env)
         return is_running()
 
     # Stop MTP
     async def stop_mtp(self):
         if not is_running():
             return
-        _ = subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, shell=True)
+        _ = subprocess.run("./stop.sh", cwd=PLUGIN_BIN_DIR, shell=True, env=env)
